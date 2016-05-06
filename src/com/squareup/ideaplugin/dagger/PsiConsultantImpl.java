@@ -111,6 +111,11 @@ public class PsiConsultantImpl {
     if (returnType != null) {
       return returnType.resolve();
     }
+
+    if (psiMethod.isConstructor()) {
+      return psiMethod.getContainingClass();
+    }
+
     return null;
   }
 

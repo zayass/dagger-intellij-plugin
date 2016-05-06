@@ -22,7 +22,7 @@ public class ConstructorInjectToInjectionPlaceHandler implements GutterIconNavig
     PsiMethod psiMethod = (PsiMethod) psiElement;
     PsiClass psiClass = PsiConsultantImpl.getClass(psiElement);
 
-    new ShowUsagesAction(new Decider.ProvidesMethodDecider(psiMethod)).startFindUsages(psiClass,
-        new RelativePoint(mouseEvent), PsiUtilBase.findEditor(psiClass), MAX_USAGES);
+    new ShowUsagesAction(new Decider.ProvidesMethodDecider(psiMethod))
+            .startFindUsages(psiClass, new RelativePoint(mouseEvent), PsiUtilBase.findEditor(psiClass), MAX_USAGES);
   }
 }

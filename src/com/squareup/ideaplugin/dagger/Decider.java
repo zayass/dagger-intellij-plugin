@@ -21,7 +21,7 @@ public interface Decider {
   boolean shouldShow(UsageTarget target, Usage usage);
 
   /** Construct with a PsiMethod from a Provider to find where this is injected. */
-  public class ProvidesMethodDecider implements Decider {
+  class ProvidesMethodDecider implements Decider {
     private final PsiClass returnType;
     private final Set<String> qualifierAnnotations;
     private final List<PsiType> typeParameters;
@@ -64,7 +64,7 @@ public interface Decider {
    * Construct with a PsiParameter from an @Inject constructor and then use this to ensure the
    * usage fits.
    */
-  public class ConstructorParameterInjectDecider extends IsAProviderDecider {
+  class ConstructorParameterInjectDecider extends IsAProviderDecider {
     public ConstructorParameterInjectDecider(PsiParameter psiParameter) {
       super(PsiConsultantImpl.getQualifierAnnotations(psiParameter),
           PsiConsultantImpl.getTypeParameters(psiParameter));
@@ -75,7 +75,7 @@ public interface Decider {
    * Construct with a PsiField annotated w/ @Inject and then use this to ensure the
    * usage fits.
    */
-  public class FieldInjectDecider extends IsAProviderDecider {
+  class FieldInjectDecider extends IsAProviderDecider {
     public FieldInjectDecider(PsiField psiField) {
       super(PsiConsultantImpl.getQualifierAnnotations(psiField),
           PsiConsultantImpl.getTypeParameters(psiField));
@@ -86,7 +86,7 @@ public interface Decider {
     private final Set<String> qualifierAnnotations;
     private final List<PsiType> typeParameters;
 
-    public IsAProviderDecider(Set<String> qualifierAnnotations, List<PsiType> typeParameters) {
+    IsAProviderDecider(Set<String> qualifierAnnotations, List<PsiType> typeParameters) {
       this.qualifierAnnotations = qualifierAnnotations;
       this.typeParameters = typeParameters;
     }
