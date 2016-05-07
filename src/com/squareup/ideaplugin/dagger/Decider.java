@@ -64,8 +64,8 @@ public interface Decider {
    * Construct with a PsiParameter from an @Inject constructor and then use this to ensure the
    * usage fits.
    */
-  class ConstructorParameterInjectDecider extends IsAProviderDecider {
-    public ConstructorParameterInjectDecider(PsiParameter psiParameter) {
+  class ParameterInjectDecider extends IsAProviderDecider {
+    public ParameterInjectDecider(PsiParameter psiParameter) {
       super(PsiConsultantImpl.getQualifierAnnotations(psiParameter),
           PsiConsultantImpl.getTypeParameters(psiParameter));
     }

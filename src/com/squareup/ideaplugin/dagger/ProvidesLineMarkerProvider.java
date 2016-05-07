@@ -8,11 +8,12 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiTypeElement;
 import com.squareup.ideaplugin.dagger.handler.ConstructorInjectToInjectionPlaceHandler;
 import com.squareup.ideaplugin.dagger.handler.ProvidesToInjectHandler;
-import java.util.Collection;
-import java.util.List;
-import javax.swing.Icon;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
+import java.util.Collection;
+import java.util.List;
 
 import static com.intellij.codeHighlighting.Pass.UPDATE_ALL;
 import static com.intellij.openapi.editor.markup.GutterIconRenderer.Alignment.LEFT;
@@ -37,7 +38,7 @@ public class ProvidesLineMarkerProvider implements LineMarkerProvider {
       if (hasAnnotation(element, CLASS_PROVIDES)) {
         PsiTypeElement returnTypeElement = methodElement.getReturnTypeElement();
         if (returnTypeElement != null) {
-          return new LineMarkerInfo<PsiElement>(element, returnTypeElement.getTextRange(), ICON,
+          return new LineMarkerInfo<PsiElement>(element, element.getTextRange(), ICON,
               UPDATE_ALL, null, new ProvidesToInjectHandler(), LEFT);
         }
       }

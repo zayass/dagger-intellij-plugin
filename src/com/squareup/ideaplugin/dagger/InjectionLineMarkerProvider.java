@@ -3,22 +3,21 @@ package com.squareup.ideaplugin.dagger;
 import com.intellij.codeInsight.daemon.LineMarkerInfo;
 import com.intellij.codeInsight.daemon.LineMarkerProvider;
 import com.intellij.openapi.util.IconLoader;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiField;
-import com.intellij.psi.PsiIdentifier;
-import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiTypeElement;
-import com.squareup.ideaplugin.dagger.handler.ConstructorInjectToProvidesHandler;
+import com.intellij.psi.*;
+import com.squareup.ideaplugin.dagger.handler.ParameterInjectToProvidesHandler;
 import com.squareup.ideaplugin.dagger.handler.FieldInjectToProvidesHandler;
-import java.util.Collection;
-import java.util.List;
-import javax.swing.Icon;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
+import java.util.Collection;
+import java.util.List;
 
 import static com.intellij.codeHighlighting.Pass.UPDATE_ALL;
 import static com.intellij.openapi.editor.markup.GutterIconRenderer.Alignment.LEFT;
 import static com.squareup.ideaplugin.dagger.DaggerConstants.CLASS_INJECT;
+import static com.squareup.ideaplugin.dagger.DaggerConstants.CLASS_PROVIDES;
+import static com.squareup.ideaplugin.dagger.PsiConsultantImpl.hasAnnotation;
 
 public class InjectionLineMarkerProvider implements LineMarkerProvider {
   private static final Icon ICON = IconLoader.getIcon("/icons/inject.png");
@@ -39,11 +38,18 @@ public class InjectionLineMarkerProvider implements LineMarkerProvider {
       PsiMethod methodElement = (PsiMethod) element;
 
       // Constructor injection.
-      if (methodElement.isConstructor() && PsiConsultantImpl.hasAnnotation(element, CLASS_INJECT)) {
-        PsiIdentifier nameIdentifier = methodElement.getNameIdentifier();
-        if (nameIdentifier != null) {
-          return new LineMarkerInfo<PsiElement>(element, nameIdentifier.getTextRange(), ICON,
-              UPDATE_ALL, null, new ConstructorInjectToProvidesHandler(), LEFT);
+      boolean isInjectableConstructor = methodElement.isConstructor() && PsiConsultantImpl.hasAnnotation(element, CLASS_INJECT);
+      // injection to provides method
+      boolean isProvidesMethod = hasAnnotation(element, CLASS_PROVIDES);
+
+
+
+      if (isInjectableConstructor || isProvidesMethod) {
+        PsiParameterList parameterList = methodElement.getParameterList();
+
+        if (parameterList.getParametersCount() > 0) {
+          return new LineMarkerInfo<PsiElement>(element, parameterList.getTextRange(), ICON,
+              UPDATE_ALL, null, new ParameterInjectToProvidesHandler(), LEFT);
         }
       }
 

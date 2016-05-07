@@ -20,18 +20,19 @@ import static com.squareup.ideaplugin.dagger.DaggerConstants.MAX_USAGES;
  *
  * Aside from that popup, this is exactly like {@link FieldInjectToProvidesHandler}.
  */
-public class ConstructorInjectToProvidesHandler implements GutterIconNavigationHandler<PsiElement> {
+public class ParameterInjectToProvidesHandler implements GutterIconNavigationHandler<PsiElement> {
   @Override public void navigate(final MouseEvent mouseEvent, PsiElement psiElement) {
     if (!(psiElement instanceof PsiMethod)) {
       throw new IllegalStateException("Called with non-method: " + psiElement);
     }
 
     PsiMethod psiMethod = (PsiMethod) psiElement;
-    if (!psiMethod.isConstructor()) {
-      throw new IllegalStateException("Called with non-constructor: " + psiElement);
+    PsiParameter[] parameters = psiMethod.getParameterList().getParameters();
+
+    if (parameters.length == 0) {
+      throw new IllegalStateException("Called with no-args method: " + psiElement);
     }
 
-    PsiParameter[] parameters = psiMethod.getParameterList().getParameters();
     if (parameters.length == 1) {
       showUsages(mouseEvent, parameters[0]);
     } else {
@@ -45,7 +46,7 @@ public class ConstructorInjectToProvidesHandler implements GutterIconNavigationH
   }
 
   private void showUsages(MouseEvent mouseEvent, PsiParameter psiParameter) {
-    new ShowUsagesAction(new Decider.ConstructorParameterInjectDecider(psiParameter)).startFindUsages(
+    new ShowUsagesAction(new Decider.ParameterInjectDecider(psiParameter)).startFindUsages(
         PsiConsultantImpl.checkForLazyOrProvider(psiParameter), new RelativePoint(mouseEvent),
         PsiUtilBase.findEditor(psiParameter), MAX_USAGES);
   }
