@@ -111,6 +111,11 @@ public interface Decider {
           .getName()
           .equals(target.getName())
 
+          // Show only method returns usage
+          && psimethod.getReturnTypeElement()
+          .getTextRange()
+          .equals(element.getTextRange())
+
           // Right type parameters.
           && PsiConsultantImpl.hasTypeParameters(psimethod, typeParameters);
     }
